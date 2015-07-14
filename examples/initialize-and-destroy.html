@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic Mikrom</title>
+    <style>
+    
+      div {
+        margin-bottom: 40px;
+      }
+      
+      .alert {
+        background: red;
+        padding: 10px;
+        color: #fff;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div>
+      <button onclick="mikrom.init()">Initialize components</button>
+      <button onclick="mikrom.destroy()">Destroy components</button>
+    </div>
+    
+    <div>    
+      <button class="alert" message="This is Mikrom component">Click me</button>
+      <button class="alert" message="This is another Mikrom component">Click me</button>
+      <button class="alert" message="They are independent">Click me</button>
+      <button class="alert" message="And initialized with the same basic code">Click me</button>
+    </div>
+    
+    <script src="../dist/mikrom.js"></script>
+    <script>
+      mikrom.component(".alert", function(attr) {
+        function doAlert() {
+          alert(attr.message);
+          return false;
+        }
+        function destroy() {
+          this.removeEventListener("click", doAlert);
+          this.removeEventListener("mikromDestroy", destroy);
+          
+          this.style.background = "red";
+        }
+        
+        this.style.background = "green";
+        
+        this.addEventListener("click", doAlert);
+        this.addEventListener("mikromDestroy", destroy);
+      });
+    </script>
+  </body>
+</html>

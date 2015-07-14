@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic Mikrom</title>
+  </head>
+  <body>
+    <button class="print" message="This is Mikrom component">Click me</button>
+    <button class="print" message="This is another Mikrom component">Click me</button>
+    <button class="print" message="They are independent">Click me</button>
+    <button class="print" message="And initialized with the same basic code">Click me</button>
+    
+    <div class="output"></div>
+    
+    <script src="../dist/mikrom.js"></script>
+    <script>
+      mikrom.component(".print", function(attr) {
+        var outputDiv = document.querySelector(".output");
+        
+        this.addEventListener("click", function() {
+          outputDiv.addRow(attr.message);
+          return false;
+        });
+      });
+      mikrom.component(".output", function() {
+        this.addRow = function(text) {
+          this.innerHTML += "<br>" + text;
+        }
+      });
+      
+      // Initialize components
+      mikrom.init();
+    </script>
+  </body>
+</html>

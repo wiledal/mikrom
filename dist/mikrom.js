@@ -26,9 +26,11 @@
     _dashToCamelCase: function(string) {
       return string.replace(/-([a-z])/gi, function (g) { return g[1].toUpperCase(); });
     },
-    init: function() { 
+    init: function(container) { 
+      var container = container || document;
+      
       for (var selector in mikrom._registeredComponents) {
-        var elements = document.querySelectorAll(selector);
+        var elements = container.querySelectorAll(selector);
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
           var attr = mikrom._getAttributes(element);

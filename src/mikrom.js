@@ -1,7 +1,9 @@
 /*
   Mikrom v1.0
   Author: Hugo Wiledal
-  Enables quick and versatile component initialization when you only need something basic.
+  
+  Enables quick and versatile js-component initialization.
+  For situations when you only need control, not bulk.
 */
 
 !function() {

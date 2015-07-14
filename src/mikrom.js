@@ -1,14 +1,17 @@
 /*
-  Mikrom v1.0
-  Author: Hugo Wiledal
+  Mikrom v1.0.0
+  Hugo Wiledal
   
   Enables quick and versatile js-component initialization.
   For situations when you only need control, not bulk.
+  
+  MIT Licensed
 */
 
 !function() {
   
   var mikrom = {
+    _version: "1.0.0",
     _registeredComponents: {},
     component: function(selector, fn) {
       mikrom._registeredComponents[selector] = fn;
@@ -16,9 +19,12 @@
     _getAttributes: function(element) {
       var attr = {};
       for (var i = 0; i < element.attributes.length; i++) {
-        attr[element.attributes[i].nodeName] = element.attributes[i].nodeValue;
+        attr[mikrom._dashToCamelCase(element.attributes[i].nodeName)] = element.attributes[i].nodeValue;
       }
       return attr;
+    },
+    _dashToCamelCase: function(string) {
+      return string.replace(/-([a-z])/gi, function (g) { return g[1].toUpperCase(); });
     },
     init: function() { 
       for (var selector in mikrom._registeredComponents) {
@@ -47,7 +53,7 @@
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
           if (!element.__mikromData.detroyed) {
-            var event = new CustomEvent("mDestroy");
+            var event = new CustomEvent("mikromDestroy");
             element.dispatchEvent(event);
             element.__mikromData.initializedComponents = {};
           }

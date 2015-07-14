@@ -13,3 +13,7 @@ gulp.task("default", function() {
     .pipe(rename("mikrom.min.js"))
     .pipe(gulp.dest("dist/"));
 });
+
+gulp.task("watch", function() {
+  gulp.watch("src/mikrom.js", ["default"]);
+});

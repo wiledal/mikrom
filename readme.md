@@ -54,7 +54,7 @@ Optionally you can supply a container in which _Mikrom_ should search for compon
 ```javascript
 mikrom.destroy([container:Element = document]);
 ```
-Triggers the `mikromDestroy`-event on all mikrom-components.
+Triggers the `mikrom:destroy`-event on all mikrom-components.
 Optionally you can supply a container in which _Mikrom_ should search for components to destroy.
 
 ### Examples

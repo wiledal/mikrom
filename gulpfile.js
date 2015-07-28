@@ -12,8 +12,19 @@ gulp.task("default", function() {
     }))
     .pipe(rename("mikrom.min.js"))
     .pipe(gulp.dest("dist/"));
+    
+  gulp.src("src/mikrom.templates.js")
+    .pipe(gulp.dest("dist/"));
+    
+  gulp.src("src/mikrom.templates.js")
+    .pipe(uglify({
+      preserveComments: "all"
+    }))
+    .pipe(rename("mikrom.templates.min.js"))
+    .pipe(gulp.dest("dist/"));
 });
 
 gulp.task("watch", function() {
-  gulp.watch("src/mikrom.js", ["default"]);
+  gulp.watch("src/*.js", ["default"]);
+  gulp.start("default");
 });

@@ -26,10 +26,6 @@
       return string.replace(/-([a-z])/gi, function (g) { return g[1].toUpperCase(); });
     },
     
-    getScope: function(element) {
-      return element.__mikromData ? element.__mikromData.scope : false;
-    },
-    
     component: function() {
       var selector = arguments[0];
       var fn = (typeof arguments[1] == "function" ? arguments[1] : arguments[2]);

@@ -5,70 +5,53 @@
   </head>
   <body>
     <div class="menu">
-      <a href="javascript:;" state-href="index">Index</a>
-      <a href="javascript:;" state-href="about">About</a>
-      <a href="javascript:;" state-href="buy">Buy</a>
+      <a href="javascript:;" app-click="appState.page='index'">Index</a>
+      <a href="javascript:;" app-click="appState.page='about'">About</a>
+      <a href="javascript:;" app-click="appState.page='buy'">Buy</a>
     </div>
     
-    <div state-if="loggedIn">
+    <div app-if="appState.loggedIn">
       Welcome, you are logged in!
     </div>
     
-    <div state-if="page=='index'">
+    <div app-if="appState.page=='index'">
       This is visible on state "index"
     </div>
-    <div state-if="page=='about'">
+    <div app-if="appState.page=='about'">
       About!
     </div>
-    <div state-if="page=='buy'">
+    <div app-if="appState.page=='buy'">
       Where to buy!
     </div>
     
-    <a href="javascript:;" state-set="loggedIn=true" state-if="!loggedIn">Log in!</a>
-    <a href="javascript:;" state-set="loggedIn=false" state-if="loggedIn">Log out!</a>
+    <a href="javascript:;" app-click="appState.loggedIn=true" app-if="!appState.loggedIn">Log in!</a>
+    <a href="javascript:;" app-click="appState.loggedIn=false" app-if="appState.loggedIn">Log out!</a>
     
     <script src="../dist/mikrom.js"></script>
     <script>
-      function AppState() {
-        this.page = null;
-      }
+      function AppState() {}
       AppState.prototype.refresh = function() {
         var e = document.createEvent("Event");
         e.initEvent("state.change");
         window.dispatchEvent(e);
       }
-      AppState.prototype.changeTo = function(page) {
-        this.page = page;
-        this.refresh();
-      }
-      
       var appState = new AppState();
       
-      mikrom.component("[state-href]", function(attr) {
+      mikrom.component("[app-click]", function(el, attr) {
         this.addEventListener("click", function() {
-          appState.changeTo(attr.stateHref);
-        })
-      });
-      
-      mikrom.component("[state-set]", function(attr) {
-        this.addEventListener("click", function() {
-          with(appState) {
-            eval(attr.stateSet);
-          }
+          eval(attr.appClick);
           appState.refresh();
         })
       });
       
-      mikrom.component("[state-if]", function(attr) {
+      mikrom.component("[app-if]", function(el, attr) {
         var el = this;
         
         window.addEventListener("state.change", function() {
-          with(appState) {
-            if (eval(attr.stateIf)) {
-              el.style.display = "block";
-            }else{
-              el.style.display = "none";
-            }
+          if (eval(attr.appIf)) {
+            el.style.display = "block";
+          }else{
+            el.style.display = "none";
           }
         })
       })
@@ -76,7 +59,8 @@
       // Initialize components
       mikrom.init();
       appState.loggedIn = false;
-      appState.changeTo("index");
+      appState.page = "index";
+      appState.refresh();
     </script>
   </body>
 </html>

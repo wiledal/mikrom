@@ -52,7 +52,7 @@
           }
           if (!element.__mikromData.initializedComponents[selector]) {
             element.__mikromData.initializedComponents[selector] = true;
-            component.fn.call(element, attr);
+            component.fn.call(element, element, attr);
           }
         }
       }
@@ -66,7 +66,7 @@
         var elements = container.querySelectorAll(selector);
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
-          if (!element.__mikromData.detroyed) {
+          if (!element.__mikromData.destroyed) {
             var event = document.createEvent("Event");
             event.initEvent("mikrom:destroy", true, true);
             element.dispatchEvent(event);

@@ -52,7 +52,7 @@
           }
           if (!element.__mikromData.initializedComponents[selector]) {
             element.__mikromData.initializedComponents[selector] = true;
-            component.fn.call(element, attr);
+            component.fn.call(element, element, attr);
           }
         }
       }

@@ -10,6 +10,13 @@
       <a href="javascript:;" app-click="appState.page='buy'">Buy</a>
     </div>
     
+    <div>
+      <p>Enter your name:</p>
+      <p><input type="text" app-bind="userName"></p>
+      <br>
+      <p>Your name is: <span app-bind="userName || 'n/a'"></span></p>
+    </div>
+    
     <div app-if="appState.loggedIn">
       Welcome, you are logged in!
     </div>
@@ -29,7 +36,9 @@
     
     <script src="../dist/mikrom.js"></script>
     <script>
-      function AppState() {}
+      function AppState() {
+        this.vars = {};
+      }
       AppState.prototype.refresh = function() {
         var e = document.createEvent("Event");
         e.initEvent("state.change");
@@ -55,6 +64,21 @@
           }
         })
       })
+      
+      mikrom.component("[app-bind]", function(el,attr) {
+        if (el.nodeName == "INPUT") {
+          el.addEventListener("input", function() {
+            appState.vars[attr.appBind] = el.value;
+            appState.refresh();
+          })
+        }else{
+          window.addEventListener("state.change", function() {
+            with(appState.vars) {
+              el.innerHTML = eval(attr.appBind);
+            }
+          });
+        }
+      });
       
       // Initialize components
       mikrom.init();

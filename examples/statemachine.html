@@ -73,9 +73,7 @@
           })
         }else{
           window.addEventListener("state.change", function() {
-            with(appState.vars) {
-              el.innerHTML = eval(attr.appBind);
-            }
+            el.innerHTML = eval("appState.vars." + attr.appBind);
           });
         }
       });

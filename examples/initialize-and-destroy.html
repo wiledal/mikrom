@@ -31,7 +31,7 @@
     
     <script src="../dist/mikrom.js"></script>
     <script>
-      mikrom.component(".alert", function(attr) {
+      mikrom.component(".alert", function(el, attr) {
         function doAlert() {
           alert(attr.message);
           return false;

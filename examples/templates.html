@@ -27,14 +27,14 @@
     <script src="../dist/mikrom.js"></script>
     <script src="../dist/mikrom.templates.min.js"></script>
     <script>
-      mikrom.component("cool-element", function(attr) {
+      mikrom.component("cool-element", function(el, attr) {
         this.templateVars = attr;
         this.addEventListener("click", function() {
           alert("I am a cool element and my power is " + attr.power);
         });
       });
       
-      mikrom.component("cool-element-collection", function(attr) {
+      mikrom.component("cool-element-collection", function(el, attr) {
         this.templateVars = attr;
       });
       

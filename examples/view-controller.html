@@ -51,7 +51,7 @@
     <script>
       var exampleScope = {};
     
-      mikrom.component(".view-container", function(attr) {
+      mikrom.component(".view-container", function(el, attr) {
         var views = this.querySelectorAll(".view");
         var currentView = null;
         
@@ -71,7 +71,7 @@
         }
       });
       
-      mikrom.component("[set-view]", function(attr) {
+      mikrom.component("[set-view]", function(el, attr) {
         this.addEventListener("click", function() {
           exampleScope.changeView(attr.setView);
         });

@@ -25,12 +25,12 @@ Inspired by the _directive_-approach of Angular 1.x.x and WebComponents.
 ```
 
 ```javascript
-mikrom.component(".selector", function(attr)) {
+mikrom.component(".selector", function(element, attr)) {
   function onClick() {
     console.log(attr.someAttribute); // prints "I am an attribute"
   }
   
-  this.addEventListener("click", onClick);
+  element.addEventListener("click", onClick);
 });
 
 mikrom.init();

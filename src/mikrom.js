@@ -11,7 +11,7 @@
 !function() {
   
   var mikrom = {
-    _version: "1.0.0",
+    _version: "1.1.0",
     _registeredComponents: {},
     _listeners: {},
     

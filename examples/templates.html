@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic Mikrom Templates test</title>
+  </head>
+  <body>
+    <p>Some cool-elements</p>
+    <cool-element name="Hugo" power="200"></cool-element>
+    <cool-element name="Sjoerd" power="10"></cool-element>
+    
+    <p>A custom element which loops out cool elements</p>
+    <cool-element-collection amount="250"></cool-element-collection>
+    
+    <script type="text/mikromtemplate" for="cool-element">
+      <div class="cool-element">
+        This is <%=vars.name%>.
+        He has a power level of <%=vars.power%>!
+      </div>
+    </script>
+    
+    <script type="text/mikromtemplate" for="cool-element-collection">
+      <% for (var i = 0; i < vars.amount; i++) { %>
+        <cool-element name="Cool thing <%=i%>" power="<%=i%>"></cool-element>
+      <% } %>
+    </script>
+    
+    <script src="../dist/mikrom.js"></script>
+    <script src="../dist/mikrom.templates.min.js"></script>
+    <script>
+      mikrom.component("cool-element", function(el, attr) {
+        this.templateVars = attr;
+        this.addEventListener("click", function() {
+          alert("I am a cool element and my power is " + attr.power);
+        });
+      });
+      
+      mikrom.component("cool-element-collection", function(el, attr) {
+        this.templateVars = attr;
+      });
+      
+      // Initialize components
+      mikrom.init();
+    </script>
+  </body>
+</html>

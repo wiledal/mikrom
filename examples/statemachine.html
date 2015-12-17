@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic Mikrom</title>
+  </head>
+  <body>
+    <div class="menu">
+      <a href="javascript:;" app-click="appState.page='index'">Index</a>
+      <a href="javascript:;" app-click="appState.page='about'">About</a>
+      <a href="javascript:;" app-click="appState.page='buy'">Buy</a>
+    </div>
+    
+    <div>
+      <p>Enter your name:</p>
+      <p><input type="text" app-bind="userName"></p>
+      <br>
+      <p>Your name is: <span app-bind="userName || 'n/a'"></span></p>
+    </div>
+    
+    <div app-if="appState.loggedIn">
+      Welcome, you are logged in!
+    </div>
+    
+    <div app-if="appState.page=='index'">
+      This is visible on state "index"
+    </div>
+    <div app-if="appState.page=='about'">
+      About!
+    </div>
+    <div app-if="appState.page=='buy'">
+      Where to buy!
+    </div>
+    
+    <a href="javascript:;" app-click="appState.loggedIn=true" app-if="!appState.loggedIn">Log in!</a>
+    <a href="javascript:;" app-click="appState.loggedIn=false" app-if="appState.loggedIn">Log out!</a>
+    
+    <script src="../dist/mikrom.js"></script>
+    <script>
+      function AppState() {
+        this.vars = {};
+      }
+      AppState.prototype.refresh = function() {
+        var e = document.createEvent("Event");
+        e.initEvent("state.change");
+        window.dispatchEvent(e);
+      }
+      var appState = new AppState();
+      
+      mikrom.component("[app-click]", function(el, attr) {
+        this.addEventListener("click", function() {
+          eval(attr.appClick);
+          appState.refresh();
+        })
+      });
+      
+      mikrom.component("[app-if]", function(el, attr) {
+        var el = this;
+        
+        window.addEventListener("state.change", function() {
+          if (eval(attr.appIf)) {
+            el.style.display = "block";
+          }else{
+            el.style.display = "none";
+          }
+        })
+      })
+      
+      mikrom.component("[app-bind]", function(el,attr) {
+        if (el.nodeName == "INPUT") {
+          el.addEventListener("input", function() {
+            appState.vars[attr.appBind] = el.value;
+            appState.refresh();
+          })
+        }else{
+          window.addEventListener("state.change", function() {
+            el.innerHTML = eval("appState.vars." + attr.appBind);
+          });
+        }
+      });
+      
+      // Initialize components
+      mikrom.init();
+      appState.loggedIn = false;
+      appState.page = "index";
+      appState.refresh();
+    </script>
+  </body>
+</html>

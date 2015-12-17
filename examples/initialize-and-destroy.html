@@ -31,14 +31,14 @@
     
     <script src="../dist/mikrom.js"></script>
     <script>
-      mikrom.component(".alert", function(attr) {
+      mikrom.component(".alert", function(el, attr) {
         function doAlert() {
           alert(attr.message);
           return false;
         }
         function destroy() {
           this.removeEventListener("click", doAlert);
-          this.removeEventListener("mikromDestroy", destroy);
+          this.removeEventListener("mikrom:destroy", destroy);
           
           this.style.background = "red";
         }
@@ -46,7 +46,7 @@
         this.style.background = "green";
         
         this.addEventListener("click", doAlert);
-        this.addEventListener("mikromDestroy", destroy);
+        this.addEventListener("mikrom:destroy", destroy);
       });
     </script>
   </body>

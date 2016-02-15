@@ -1,5 +1,5 @@
 /*
-  Mikrom Templates v0.1.0
+  Mikrom Templates v0.1.1
   Hugo Wiledal
   
   Enables quick and versatile js-component initialization.
@@ -63,6 +63,6 @@
   if (window.mikrom) {
     window.mikrom.templates = mikromTemplates;
     mikromTemplates.init();
-    window.mikrom.addEventListener("init", mikromTemplates.initTemplates);
+    window.mikrom.on("init", mikromTemplates.initTemplates);
   }
 }();

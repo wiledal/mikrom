@@ -1,15 +1,7 @@
 var gulp = require("gulp"),
     include = require("gulp-include"),
-    svgmin = require("gulp-svgmin"),
-    sass = require("gulp-sass"),
-    autoprefixer = require("gulp-autoprefixer"),
     watch = require("gulp-watch"),
     colors = require("colors"),
-    notifier = require("node-notifier"),
-    sassglob = require("gulp-sass-glob"),
-    express = require("express"),
-    shell = require("gulp-shell"),
-    del = require("del"),
     browserSync = require("browser-sync");
 
 

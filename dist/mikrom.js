@@ -75,7 +75,7 @@
           var element = elements[i];
           if (!element.__mikromData.destroyed) {
             var event = document.createEvent("Event");
-            event.initEvent("mikrom:destroy", true, true);
+            event.initEvent("mikrom.destroy", true, true);
             element.dispatchEvent(event);
             element.__mikromData.initializedComponents = {};
           }

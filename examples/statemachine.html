@@ -2,87 +2,97 @@
 <html>
   <head>
     <title>Basic Mikrom</title>
+    <link rel="stylesheet" href="assets/styles.css">
   </head>
+  
   <body>
-    <div class="menu">
-      <a href="javascript:;" app-click="appState.page='index'">Index</a>
-      <a href="javascript:;" app-click="appState.page='about'">About</a>
-      <a href="javascript:;" app-click="appState.page='buy'">Buy</a>
-    </div>
     
-    <div>
-      <p>Enter your name:</p>
-      <p><input type="text" app-bind="userName"></p>
-      <br>
-      <p>Your name is: <span app-bind="userName || 'n/a'"></span></p>
+    <div class="wrapper">
+      <div class="menu">
+        <a app-href="home">Home</a>
+        <a app-href="page2">Another page</a>
+        <a app-href="page3">Some other page</a>
+        <a app-href="page4">A third page</a>
+      </div>
+      
+      <div app-if="page==home">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere accusamus nemo rem necessitatibus, esse amet ullam eveniet asperiores. Mollitia atque temporibus qui modi veniam culpa aspernatur, sint consequatur dolore at!</p>
+        <p><img src="http://lorempixel.com/400/200" alt=""></p>
+      </div>
+      <div app-if="page==page2">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis in modi, odio sint repellendus alias reprehenderit voluptatem architecto quod, possimus ex iste neque facere quae eius vitae debitis doloremque error.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere accusamus nemo rem necessitatibus, esse amet ullam eveniet asperiores. Mollitia atque temporibus qui modi veniam culpa aspernatur, sint consequatur dolore at!</p>
+        <p><img src="http://lorempixel.com/350/200" alt=""></p>
+      </div>
+      <div app-if="page==page3">This is the home page3</div>
+      <div app-if="page==page4">This is the home page4</div>
     </div>
-    
-    <div app-if="appState.loggedIn">
-      Welcome, you are logged in!
-    </div>
-    
-    <div app-if="appState.page=='index'">
-      This is visible on state "index"
-    </div>
-    <div app-if="appState.page=='about'">
-      About!
-    </div>
-    <div app-if="appState.page=='buy'">
-      Where to buy!
-    </div>
-    
-    <a href="javascript:;" app-click="appState.loggedIn=true" app-if="!appState.loggedIn">Log in!</a>
-    <a href="javascript:;" app-click="appState.loggedIn=false" app-if="appState.loggedIn">Log out!</a>
-    
+      
     <script src="../dist/mikrom.js"></script>
     <script>
-      function AppState() {
-        this.vars = {};
+      var State = {
+        watchers: [],
+        vars: {},
+        dirty: true,
+        
+        varFromString: function(string) {
+          var arr = string.split('.');
+          var test = arr.shift();
+
+          var nested = State.vars[test];
+
+          if (arr.length > 0) {
+            return State.nestedFromString(arr.join("."), nested);
+          }else {
+            return nested;
+          }
+        },
+        set(v, value) {
+          State.vars[v] = value;
+          State.dirty = true;
+        },
+        loop: function() {
+          requestAnimationFrame(State.loop);
+          if (State.dirty) State.update();
+        },
+        update: function() {
+          State.dirty = false;
+          mikrom.trigger("state.update");
+        }
       }
-      AppState.prototype.refresh = function() {
-        var e = document.createEvent("Event");
-        e.initEvent("state.change");
-        window.dispatchEvent(e);
-      }
-      var appState = new AppState();
       
-      mikrom.component("[app-click]", function(el, attr) {
-        this.addEventListener("click", function() {
-          eval(attr.appClick);
-          appState.refresh();
+      var StateAnimation = {
+        library: {},
+        add: function(name, callback) {
+          StateAnimation[name] = callback;
+        }
+      }
+      
+      mikrom.component("[app-href]", function(el, attr) {
+        console.log("I'm HERE")
+        el.addEventListener("click", function() {
+          State.set("page", attr.appHref);
         })
-      });
+      })
       
       mikrom.component("[app-if]", function(el, attr) {
-        var el = this;
+        var varName = attr.appIf.split("==")[0];
+        var val = attr.appIf.split("==")[1];
         
-        window.addEventListener("state.change", function() {
-          if (eval(attr.appIf)) {
-            el.style.display = "block";
+        mikrom.on("state.update", function() {
+          var v = State.varFromString(varName);
+
+          if (v == val) {
+            el.style.display = "";
           }else{
             el.style.display = "none";
           }
         })
-      })
-      
-      mikrom.component("[app-bind]", function(el,attr) {
-        if (el.nodeName == "INPUT") {
-          el.addEventListener("input", function() {
-            appState.vars[attr.appBind] = el.value;
-            appState.refresh();
-          })
-        }else{
-          window.addEventListener("state.change", function() {
-            el.innerHTML = eval("appState.vars." + attr.appBind);
-          });
-        }
       });
       
-      // Initialize components
       mikrom.init();
-      appState.loggedIn = false;
-      appState.page = "index";
-      appState.refresh();
+      
+      State.set("page", "home");
+      State.loop();
     </script>
   </body>
 </html>

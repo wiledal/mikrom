@@ -1,24 +1,26 @@
 {
-  "name": "mikrom",
+  "name": "dronesim",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wiledal/mikrom.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/wiledal/mikrom/issues"
-  },
-  "homepage": "https://github.com/wiledal/mikrom",
   "dependencies": {
+    "browser-sync": "^2.11.1",
+    "colors": "^1.1.2",
+    "del": "^2.2.0",
+    "express": "^4.13.4",
     "gulp": "^3.9.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.2.0"
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-include": "^2.1.0",
+    "gulp-sass": "^2.2.0",
+    "gulp-sass-glob": "0.0.8",
+    "gulp-shell": "^0.5.2",
+    "gulp-svgmin": "^1.2.1",
+    "gulp-watch": "^4.3.5",
+    "node-notifier": "^4.4.0"
   }
 }

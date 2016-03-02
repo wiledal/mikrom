@@ -69,7 +69,7 @@ Optionally you can supply an element to limit the search, which is ideal for pag
 ```javascript
 mikrom.destroy([container:Element = document]);
 ```
-Triggers the `mikrom:destroy`-event on all mikrom-components.
+Triggers the `mikrom.destroy`-event on all mikrom-components.
 Optionally you can supply an element to limit the search.
 
 ### Examples

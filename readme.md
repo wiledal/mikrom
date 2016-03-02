@@ -18,6 +18,9 @@ Inspired by the _directive_-approach of Angular 1.x.x and WebComponents.
   - Supports modern browsers
 
 ### Usage
+#### Basic initiation
+Mikrom components are basically functions tied to selectors.
+
 ```html
 <div class="special-button" some-attribute="I am an attribute">
   Click me!
@@ -27,13 +30,26 @@ Inspired by the _directive_-approach of Angular 1.x.x and WebComponents.
 ```javascript
 mikrom.component(".special-button", function(el, attr) {
   function onClick() {
-    console.log(attr.someAttribute); // "I am an attribute"
+    console.log(attr.someAttribute);
   }
   
   el.addEventListener("click", onClick);
 });
 
 mikrom.init();
+```
+
+#### Extending
+Mikrom components can extend each other, so that the functionality of one can be used within another.
+
+```javascript
+mikrom.component(".special-button-that-also-hovers", [".special-button"], function(el, attr) {
+  function hovered() {
+    el.style.background = "red";
+  }
+  
+  el.addEventListener("mouseover", hovered);
+});
 ```
 
 ### Method overview

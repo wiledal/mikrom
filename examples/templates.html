@@ -2,40 +2,57 @@
 <html>
   <head>
     <title>Basic Mikrom Templates test</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    
+    <style>
+      p {
+        margin: 20px 0;  
+      }
+      .cool-element {
+        margin-bottom: 5px;
+      }
+    </style>
   </head>
   <body>
-    <p>Some cool-elements</p>
-    <cool-element name="Hugo" power="200"></cool-element>
-    <cool-element name="Sjoerd" power="10"></cool-element>
+    <!-- THE BASIC HTML -->
+    <div class="wrapper">
+      <p>Some cool-elements</p>
+      <cool-element name="John Doeson" power="10"></cool-element>
+      <cool-element name="Doe Johnson" power="50"></cool-element>
+      
+      <p>Below is a custom element which loops out more custom elements</p>
+      
+      <cool-element-collection amount="250"></cool-element-collection>
+      
+      <p>Pretty meta.</p>
+    </div>
     
-    <p>A custom element which loops out cool elements</p>
-    <cool-element-collection amount="250"></cool-element-collection>
-    
+    <!-- THE TEMPLATES -->
     <script type="text/mikromtemplate" for="cool-element">
       <div class="cool-element">
-        This is <%=vars.name%>.
-        He has a power level of <%=vars.power%>!
+        <%=vars.name%>: Power level of <%=vars.power%>!
       </div>
     </script>
     
     <script type="text/mikromtemplate" for="cool-element-collection">
       <% for (var i = 0; i < vars.amount; i++) { %>
-        <cool-element name="Cool thing <%=i%>" power="<%=i%>"></cool-element>
+        <cool-element name="[<%=i%>] <% if (i < 100) { %>Cool thing<% } else { %>Cool thing over 100<% } %>" power="<%=i%>"></cool-element>
       <% } %>
     </script>
     
+    <!-- THE BEHAVIOR ETC -->
     <script src="../dist/mikrom.js"></script>
     <script src="../dist/mikrom.templates.min.js"></script>
     <script>
       mikrom.component("cool-element", function(el, attr) {
-        this.templateVars = attr;
-        this.addEventListener("click", function() {
+        el.templateVars = attr;
+        el.addEventListener("click", function() {
           alert("I am a cool element and my power is " + attr.power);
         });
       });
       
       mikrom.component("cool-element-collection", function(el, attr) {
-        this.templateVars = attr;
+        el.templateVars = attr;
       });
       
       // Initialize components

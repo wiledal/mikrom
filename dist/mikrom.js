@@ -1,5 +1,5 @@
 /*
-  Mikrom v1.1.0
+  Mikrom
   Hugo Wiledal
   
   Enables quick and versatile js-component initialization.
@@ -11,7 +11,7 @@
 !function() {
   
   var mikrom = {
-    _version: "1.0.0",
+    _version: "2.0.0",
     _registeredComponents: {},
     _listeners: {},
     
@@ -28,10 +28,14 @@
     
     component: function() {
       var selector = arguments[0];
+      var extensions = (typeof arguments[1] == "string" || typeof arguments[1] == "object") ? arguments[1] : [];
       var fn = (typeof arguments[1] == "function" ? arguments[1] : arguments[2]);
       
+      var extensions = typeof extensions == "string" ? [extensions] : extensions;
+      
       mikrom._registeredComponents[selector] = {
-        fn: fn
+        fn: fn,
+        extends: extensions
       }
     },
     init: function(container) { 
@@ -39,7 +43,6 @@
       
       for (var selector in mikrom._registeredComponents) {
         var elements = container.querySelectorAll(selector);
-        var component = mikrom._registeredComponents[selector];
         
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
@@ -50,14 +53,18 @@
               initializedComponents: {}
             };
           }
-          if (!element.__mikromData.initializedComponents[selector]) {
-            element.__mikromData.initializedComponents[selector] = true;
-            component.fn.call(element, element, attr);
-          }
+          mikrom.apply(selector, element, attr);
         }
       }
       
       mikrom.trigger("init", container);
+    },
+    apply: function(selector, element, attr) {
+      var component = mikrom._registeredComponents[selector];
+      for (var i = 0; i < component.extends.length; i++) {
+        mikrom.apply(component.extends[i], element, attr);
+      }
+      component.fn.call(window, element, attr);
     },
     destroy: function(container) {
       var container = container || document;
@@ -68,14 +75,14 @@
           var element = elements[i];
           if (!element.__mikromData.destroyed) {
             var event = document.createEvent("Event");
-            event.initEvent("mikrom:destroy", true, true);
+            event.initEvent("mikrom.destroy", true, true);
             element.dispatchEvent(event);
             element.__mikromData.initializedComponents = {};
           }
         }
       }
     },
-    addEventListener: function(listener, fn) {
+    on: function(listener, fn) {
       if (!mikrom._listeners[listener]) mikrom._listeners[listener] = [];
       mikrom._listeners[listener].push(fn);
     },
@@ -90,5 +97,4 @@
   }
   
   window.mikrom = mikrom;
-  
 }();

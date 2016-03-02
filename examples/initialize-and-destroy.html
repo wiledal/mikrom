@@ -37,16 +37,16 @@
           return false;
         }
         function destroy() {
-          this.removeEventListener("click", doAlert);
-          this.removeEventListener("mikrom:destroy", destroy);
+          el.removeEventListener("click", doAlert);
+          el.removeEventListener("mikrom.destroy", destroy);
           
-          this.style.background = "red";
+          el.style.background = "red";
         }
         
-        this.style.background = "green";
+        el.style.background = "green";
         
-        this.addEventListener("click", doAlert);
-        this.addEventListener("mikrom:destroy", destroy);
+        el.addEventListener("click", doAlert);
+        el.addEventListener("mikrom.destroy", destroy);
       });
     </script>
   </body>

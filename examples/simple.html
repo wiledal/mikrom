@@ -16,13 +16,13 @@
       mikrom.component(".print", function(el, attr) {
         var outputDiv = document.querySelector(".output");
         
-        this.addEventListener("click", function() {
+        el.addEventListener("click", function() {
           outputDiv.addRow(attr.message);
           return false;
         });
       });
-      mikrom.component(".output", function() {
-        this.addRow = function(text) {
+      mikrom.component(".output", function(el, attr) {
+        el.addRow = function(text) {
           this.innerHTML += "<br>" + text;
         }
       });

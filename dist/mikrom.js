@@ -60,10 +60,12 @@
       mikrom.trigger("init", container);
     },
     apply: function(selector, element, attr) {
+      if (element.__mikromData.initializedComponents[selector]) return;
       var component = mikrom._registeredComponents[selector];
       for (var i = 0; i < component.extends.length; i++) {
         mikrom.apply(component.extends[i], element, attr);
       }
+      element.__mikromData.initializedComponents[selector] = true;
       component.fn.call(window, element, attr);
     },
     destroy: function(container) {

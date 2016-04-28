@@ -2,7 +2,8 @@ var gulp = require("gulp"),
     include = require("gulp-include"),
     watch = require("gulp-watch"),
     colors = require("colors"),
-    browserSync = require("browser-sync");
+    uglify = require("gulp-uglify"),
+    rename = require("gulp-rename");
 
 
 function notifyError(error) {
@@ -30,26 +31,26 @@ gulp.task("build-js", function() {
     .pipe(include())
     .on("error", notifyError)
     .pipe(gulp.dest("dist"));
-  
-  browserSync.reload();
-});
-
-gulp.task("serve", ["watch"], function() {
-  browserSync.init({
-    server: {
-      baseDir: ".",
-      directory: true
-    }
-  });
+    
+  gulp.src("src/**/*.js")
+    .pipe(include())
+    .pipe(uglify({
+      preserveComments: "all"
+    }))
+    .pipe(rename(function(path) {
+      path.extname = ".min.js"
+    }))
+    .on("error", notifyError)
+    .pipe(gulp.dest("dist"));
+    
 });
 
 gulp.task("watch", function() {
   watch("src/**/*", function() {
     gulp.start("build-js");
   });
-  watch("examples/**/*", function() {
-    browserSync.reload();
-  })
 });
+
+gulp.task("default", ["build-js"]);
 
  console.log("Señor Gulpfile".rainbow)

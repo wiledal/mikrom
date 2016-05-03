@@ -83,7 +83,7 @@
           }
         }
       }
-    }
+    },
     on: function(listener, fn) {
       if (!mikrom._listeners[listener]) mikrom._listeners[listener] = [];
       mikrom._listeners[listener].push(fn);

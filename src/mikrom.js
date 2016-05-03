@@ -11,7 +11,7 @@
 !function() {
   
   var mikrom = {
-    _version: "2.0.1",
+    _version: "2.0.2",
     _registeredComponents: {},
     _listeners: {},
     
@@ -75,7 +75,7 @@
         var elements = container.querySelectorAll(selector);
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
-          if (!element.__mikromData.destroyed) {
+          if (element.__mikromData) {
             var event = document.createEvent("Event");
             event.initEvent("mikrom.destroy", true, true);
             element.dispatchEvent(event);
@@ -83,7 +83,7 @@
           }
         }
       }
-    },
+    }
     on: function(listener, fn) {
       if (!mikrom._listeners[listener]) mikrom._listeners[listener] = [];
       mikrom._listeners[listener].push(fn);

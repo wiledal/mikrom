@@ -2,34 +2,35 @@
 <html>
   <head>
     <title>Basic Mikrom</title>
+    <style>
+      button {
+        display: block;
+      }
+    </style>
   </head>
   <body>
     <button class="print" message="This is Mikrom component">Click me</button>
     <button class="print" message="This is another Mikrom component">Click me</button>
     <button class="print" message="They are independent">Click me</button>
     <button class="print" message="And initialized with the same basic code">Click me</button>
-    
+
     <div class="output"></div>
-    
+
     <script src="../dist/mikrom.js"></script>
     <script>
-      mikrom.component(".print", function(el, attr) {
-        console.log("INITIATED .print")
-        var outputDiv = document.querySelector(".output");
-        
-        el.addEventListener("click", function() {
-          outputDiv.addRow(attr.message);
-          return false;
-        });
-      });
-      mikrom.component(".output", function(el, attr) {
-        el.addRow = function(text) {
-          this.innerHTML += "<br>" + text;
+      class Component extends HTMLElement {
+        createdCallback() {
+          this.addEventListener('click', () => {
+            this.updateText();
+          })
         }
-      });
-      
-      // Initialize components
-      mikrom.init();
+
+        updateText() {
+          this.innerText = `My message is: ${this.getAttribute('message')}`;
+        }
+      }
+  
+      mikrom.component('button.print', Component);
     </script>
   </body>
 </html>

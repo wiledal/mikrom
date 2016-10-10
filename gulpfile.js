@@ -1,51 +1,44 @@
-var gulp = require("gulp"),
-    include = require("gulp-include"),
-    watch = require("gulp-watch"),
-    colors = require("colors"),
-    uglify = require("gulp-uglify"),
-    rename = require("gulp-rename");
-
+var gulp = require("gulp");
+var include = require("gulp-include");
+var watch = require("gulp-watch");
+var colors = require("colors");
+var uglify = require("gulp-uglify");
+var rename = require("gulp-rename");
+var babel = require('gulp-babel');
 
 function notifyError(error) {
   console.log(" - There was an error compiling:".red);
-  console.log(error.messageFormatted);
-  
-  var weHaveAProblem = [
-    "Something went terribly wrong.",
-    "Something broke, big time.",
-    "You killed it, you bastard, you actually killed it.",
-    "Everytime the code breaks, a kitten loses its wings."
-  ];
-  
-  notifier.notify({
-    title: "[GULP] We have a problem",
-    icon: "https://lh3.googleusercontent.com/E6EO3XO6zP7NtBq2L9SDF1DbBoYamUWc8QTRvOFuQg_Gka2Vw_RIv-AjU5Ysu4XgwHU=w170",
-    message: weHaveAProblem[Math.floor(Math.random() * weHaveAProblem.length)] + " Check the console please."
-  })
+  console.log(error.stack);
 }
 
 
-gulp.task("build-js", function() {
+gulp.task("build-js", () => {
   console.log(" -- Compiling ".green + "js ".cyan + new Date());
   gulp.src("src/**/*.js")
     .pipe(include())
-    .on("error", notifyError)
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+      .on("error", notifyError)
     .pipe(gulp.dest("dist"));
-    
+
   gulp.src("src/**/*.js")
     .pipe(include())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(uglify({
       preserveComments: "all"
     }))
-    .pipe(rename(function(path) {
+    .pipe(rename((path) => {
       path.extname = ".min.js"
     }))
-    .on("error", notifyError)
+      .on("error", notifyError)
     .pipe(gulp.dest("dist"));
-    
+
 });
 
-gulp.task("watch", function() {
+gulp.task("watch", () => {
   watch("src/**/*", function() {
     gulp.start("build-js");
   });

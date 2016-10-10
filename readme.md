@@ -13,10 +13,11 @@ No _$scopes_, no _templates_, just elements and javascript.
   - Tiny library; tiny footprint
   - Reusable components; write once and use in multiple projects
   - Modern browser support
+  - Automatic initiation
 
 ### Usage
 #### Basic initiation
-Mikrom 3.x follows the same pattern as the  [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements/Custom_Elements_with_Classes), but uses selectors rather than limiting the initiation to tag-names.
+Mikrom 3.x follows the same pattern as [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements/Custom_Elements_with_Classes), but uses selectors rather than limiting the registration to tag-names.
 
 ```html
 <div class="special-button" some-attribute="I am an attribute">
@@ -35,14 +36,14 @@ class SpecialButton extends HTMLElement {
 mikrom.component('.special-button', SpecialButton)
 ```
 
-Mikrom can be used as a basic `CustomElement`-polyfill. But it's lacking any features outside of the standard element lifecycle callbacks.
+Mikrom can be used as a basic _non-standard_ `Custom Element`-polyfill. But it's lacking any features outside of the element lifecycle callbacks.
 ```javascript
 document.registerElement = mikrom.component;
 ```
 
 ### Method overview
 ```javascript
-mikrom.component(selector:String, definition:Function)
+mikrom.component(selector:String, definition:Class)
 ```
 Register a component with _Mikrom_.
 

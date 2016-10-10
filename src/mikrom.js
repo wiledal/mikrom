@@ -1,5 +1,5 @@
 ;(function () {
-  // shim for safari
+  // Safari shim
   if (typeof HTMLElement !== 'function') {
     var _HTMLElement = function () {}
     _HTMLElement.prototype = HTMLElement.prototype
@@ -27,11 +27,13 @@
         if (m.type === 'childList') {
           for (var i = 0; i < m.removedNodes.length; i++) {
             var t = m.removedNodes[i]
-            if (t.detachedCallback) t.detachedCallback()
+            if (t.detachedCallback && t.__componentAttached) t.detachedCallback()
+            if (t.__componentPatched) t.__componentAttached = false
           }
           for (var i = 0; i < m.addedNodes.length; i++) {
             var t = m.addedNodes[i]
-            if (t.attachedCallback) t.attachedCallback()
+            if (t.attachedCallback && !t.__componentAttached) t.attachedCallback()
+            if (t.__componentPatched) t.__componentAttached = true
           }
         }
       })
@@ -44,6 +46,7 @@
           if (el.__componentPatched) return
           el.__componentPatched = true
           el.__proto__ = mikrom._registered[selector].prototype
+          el.__componentAttached = true
 
           if (el.createdCallback) el.createdCallback()
           if (el.attachedCallback) el.attachedCallback()

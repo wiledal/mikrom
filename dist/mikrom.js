@@ -1,15 +1,24 @@
 'use strict';
 
 ;(function () {
-  // shim for safari
+  // Safari shim
   if (typeof HTMLElement !== 'function') {
     var _HTMLElement = function _HTMLElement() {};
     _HTMLElement.prototype = HTMLElement.prototype;
     HTMLElement = _HTMLElement;
   }
 
+  function callOnAllChildren(el, func) {
+    func(el);
+    if (el.children) {
+      ;[].slice.call(el.children).forEach(function (el) {
+        callOnAllChildren(el, func);
+      });
+    }
+  }
+
   var mikrom = {
-    version: '3.0.0',
+    version: '3.0.4',
     _registered: {},
     _observer: null,
 
@@ -28,8 +37,11 @@
         if (m.type === 'childList') {
           for (var i = 0; i < m.removedNodes.length; i++) {
             var t = m.removedNodes[i];
-            if (t.detachedCallback && t.__componentAttached) t.detachedCallback();
-            if (t.__componentPatched) t.__componentAttached = false;
+
+            callOnAllChildren(t, function (el) {
+              if (el.detachedCallback && el.__componentAttached) el.detachedCallback();
+              if (el.__componentPatched) el.__componentAttached = false;
+            });
           }
           for (var i = 0; i < m.addedNodes.length; i++) {
             var t = m.addedNodes[i];
@@ -40,18 +52,24 @@
       });
     },
     initiate: function initiate(container) {
+      var registered = [];
       for (var selector in mikrom._registered) {
         var els = [].slice.call(container.querySelectorAll(selector));
         els.forEach(function (el) {
-          if (el.__componentPatched) return;
-          el.__componentPatched = true;
+          if (!el.__componentPatched) el.__componentPatched = {};
+          if (el.__componentPatched[selector]) return;
+          el.__componentPatched[selector] = true;
           el.__proto__ = mikrom._registered[selector].prototype;
-          el.__componentAttached = true;
-
-          if (el.createdCallback) el.createdCallback();
-          if (el.attachedCallback) el.attachedCallback();
+          registered.push(el);
         });
       }
+      registered.forEach(function (el) {
+        if (el.__componentAttached && el.__componentPatched) return;
+        el.__componentAttached = true;
+
+        if (el.createdCallback) el.createdCallback();
+        if (el.attachedCallback) el.attachedCallback();
+      });
     },
     component: function component(selector, definition) {
       mikrom._registered[selector] = definition;

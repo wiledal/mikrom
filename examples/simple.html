@@ -2,34 +2,63 @@
 <html>
   <head>
     <title>Basic Mikrom</title>
+    <style>
+      button {
+        display: block;
+      }
+    </style>
   </head>
   <body>
-    <button class="print" message="This is Mikrom component">Click me</button>
-    <button class="print" message="This is another Mikrom component">Click me</button>
-    <button class="print" message="They are independent">Click me</button>
-    <button class="print" message="And initialized with the same basic code">Click me</button>
-    
+    <button class="print" data-message="This is Mikrom component">Click me</button>
+    <button class="print" data-message="This is another Mikrom component">Click me</button>
+    <button class="print" data-message="They are independent">Click me</button>
+    <button class="print print-inherited" data-message="And initialized with the same basic code">Click me</button>
+
+    <div class="thing">
+      <div class="nested"></div>
+    </div>
+
     <div class="output"></div>
-    
+
     <script src="../dist/mikrom.js"></script>
     <script>
-      mikrom.component(".print", function(el, attr) {
-        console.log("INITIATED .print")
-        var outputDiv = document.querySelector(".output");
-        
-        el.addEventListener("click", function() {
-          outputDiv.addRow(attr.message);
-          return false;
-        });
-      });
-      mikrom.component(".output", function(el, attr) {
-        el.addRow = function(text) {
-          this.innerHTML += "<br>" + text;
+      class Component extends HTMLElement {
+        createdCallback() {
+          console.log('createdc')
+          this.addEventListener('click', () => {
+            this.updateText();
+          })
         }
-      });
-      
-      // Initialize components
-      mikrom.init();
+
+        updateText() {
+          this.innerText = `My message is: ${this.dataset.message}`;
+        }
+      }
+      mikrom.component('button.print', Component);
+
+      class InheritedComponent extends Component {
+        attachedCallback() {
+          console.log("hello")
+        }
+
+        updateText() {
+          super.updateText()
+          alert(this.dataset.message)
+        }
+      }
+      mikrom.component('button.print-inherited', InheritedComponent);
+
+      class NestedThing extends HTMLElement {
+        attachedCallback () {
+          console.log("I LIVE")
+          this.innerHTML = 'I was added'
+        }
+        detachedCallback () {
+          alert('My parent was removed, so I was removed.')
+        }
+      }
+      mikrom.component('.nested', NestedThing)
+
     </script>
   </body>
 </html>

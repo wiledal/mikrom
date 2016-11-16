@@ -6,8 +6,7 @@ Sometimes all you need are some damn self-initiating components that run instant
 
 _Mikrom_ is a tiny library for the people who jumped off the framework hype-train and like full control over their applications.  
 
-It's made to be super simple and straight up flexible.
-No _$scopes_, no _templates_, just elements and javascript.
+It's made with simplicity and flexibility in mind.
 
 ### Features
   - Tiny library; tiny footprint
@@ -17,28 +16,56 @@ No _$scopes_, no _templates_, just elements and javascript.
 
 ### Usage
 #### Basic initiation
-Mikrom 3.x follows the same pattern as [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements/Custom_Elements_with_Classes), but uses selectors rather than limiting the registration to tag-names.
+Mikrom 3 follows the same pattern as [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements/Custom_Elements_with_Classes), but uses selectors rather than limiting the registration to tag-names.
 
 ```html
-<div class="special-button" some-attribute="I am an attribute">
+<div class="special-button" data-some-attribute="I am an attribute">
   Click me!
 </div>
 ```
 
 ```javascript
 class SpecialButton extends HTMLElement {
-  createdCallback() {
-    this.addEventListener('click', () => {
-      alert(this.getAttribute('some-attribute'))
-    })
+  attachedCallback () {
+    this._onClick = this._onClick.bind(this)
+
+    this.addEventListener('click', this._onClick)
+  }
+
+  detachedCallback () {
+    this.removeEventListener('click', this._onClick)
+  }
+
+  _onClick () {
+    alert(this.dataset.someAttribute)
   }
 }
 mikrom.component('.special-button', SpecialButton)
 ```
+Mikrom uses MutationObserver to automatically handle components as they are added, changed, and removed from the DOM.
 
-Mikrom can be used as a basic _non-standard_ `Custom Element`-polyfill. But it's lacking any features outside of the element lifecycle callbacks.
+Mikrom can be used as a basic _non-standard_ `Custom Element`-polyfill. But it's lacking any features outside of the element lifecycle callbacks.  
 ```javascript
-document.registerElement = mikrom.component;
+document.registerElement = mikrom.component
+```
+
+### Component lifecycle
+```js
+class MyCustomElement extends HTMLElement {
+  createdCallback () {
+    // Fired when the element attached to the DOM, before attachedCallback
+    // (It's recommended to just use attachedCallback)
+  }
+  attachedCallback () {
+    // Fired when the element is attached to the DOM
+  }
+  attributeChangedCallback () {
+    // Fired when an attribute has changed on the element
+  }
+  detachedCallback () {
+    // Fired when the element has been removed from the DOM
+  }
+}
 ```
 
 ### Method overview

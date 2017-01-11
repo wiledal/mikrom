@@ -16,7 +16,9 @@ It's made with simplicity and flexibility in mind.
 
 ### Usage
 #### Basic initiation
-Mikrom 3 follows the same pattern as [Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Custom_Elements/Custom_Elements_with_Classes), but uses selectors rather than limiting the registration to tag-names.
+Mikrom 4.x follows the same pattern as [Custom Elements v1](https://developers.google.com/web/fundamentals/getting-started/primers/customelements), but uses selectors rather than limiting the registration to tag-names.
+
+> Note: Mikrom does not fire element constructors, only lifecycle callbacks are usable
 
 ```html
 <div class="special-button" data-some-attribute="I am an attribute">
@@ -26,13 +28,13 @@ Mikrom 3 follows the same pattern as [Custom Elements](https://developer.mozilla
 
 ```javascript
 class SpecialButton extends HTMLElement {
-  attachedCallback () {
+  connectedCallback () {
     this._onClick = this._onClick.bind(this)
 
     this.addEventListener('click', this._onClick)
   }
 
-  detachedCallback () {
+  disconnectedCallback () {
     this.removeEventListener('click', this._onClick)
   }
 
@@ -52,17 +54,13 @@ document.registerElement = mikrom.component
 ### Component lifecycle
 ```js
 class MyCustomElement extends HTMLElement {
-  createdCallback () {
-    // Fired when the element attached to the DOM, before attachedCallback
-    // (It's recommended to just use attachedCallback)
-  }
-  attachedCallback () {
+  connectedCallback () {
     // Fired when the element is attached to the DOM
   }
   attributeChangedCallback () {
     // Fired when an attribute has changed on the element
   }
-  detachedCallback () {
+  disconnectedCallback () {
     // Fired when the element has been removed from the DOM
   }
 }

@@ -12,19 +12,17 @@
     <button class="print" data-message="This is Mikrom component">Click me</button>
     <button class="print" data-message="This is another Mikrom component">Click me</button>
     <button class="print" data-message="They are independent">Click me</button>
-    <button class="print print-inherited" data-message="And initialized with the same basic code">Click me</button>
+    <button class="print-inherited" data-message="And initialized with the same basic code">Click me</button>
 
-    <div class="thing">
-      <div class="nested"></div>
-    </div>
+    <cool-thing></cool-thing>
 
     <div class="output"></div>
 
     <script src="../dist/mikrom.js"></script>
     <script>
       class Component extends HTMLElement {
-        createdCallback() {
-          console.log('createdc')
+        connectedCallback() {
+          console.log('created')
           this.addEventListener('click', () => {
             this.updateText();
           })
@@ -37,8 +35,9 @@
       mikrom.component('button.print', Component);
 
       class InheritedComponent extends Component {
-        attachedCallback() {
-          console.log("hello")
+        connectedCallback() {
+          super.connectedCallback()
+          console.log("I am print.inherited")
         }
 
         updateText() {
@@ -49,15 +48,35 @@
       mikrom.component('button.print-inherited', InheritedComponent);
 
       class NestedThing extends HTMLElement {
-        attachedCallback () {
+        connectedCallback () {
           console.log("I LIVE")
           this.innerHTML = 'I was added'
         }
-        detachedCallback () {
+        disconnectedCallback () {
           alert('My parent was removed, so I was removed.')
         }
       }
       mikrom.component('.nested', NestedThing)
+
+      class CoolThing extends HTMLElement {
+        connectedCallback () {
+          console.log('hello I am cool thing')
+
+          this._render()
+
+          this.addEventListener('click', () => {
+            this.parentNode.removeChild(this)
+          })
+        }
+
+        _render () {
+          console.log('i am nest render')
+          this.innerHTML = `
+            <div class="nested">I'm nested</div>
+          `
+        }
+      }
+      mikrom.component('cool-thing', CoolThing)
 
     </script>
   </body>

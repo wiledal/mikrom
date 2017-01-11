@@ -16,7 +16,7 @@
   }
 
   var mikrom = {
-    version: '3.0.4',
+    version: '4.0.0',
     _registered: {},
     _observer: null,
 
@@ -38,13 +38,13 @@
             var t = m.removedNodes[i]
 
             callOnAllChildren(t, (el) => {
-              if (el.detachedCallback && el.__componentAttached) el.detachedCallback()
+              if (el.disconnectedCallback && el.__componentAttached) el.disconnectedCallback()
               if (el.__componentPatched) el.__componentAttached = false
             })
           }
           for (var i = 0; i < m.addedNodes.length; i++) {
             var t = m.addedNodes[i]
-            if (t.attachedCallback && !t.__componentAttached) t.attachedCallback()
+            if (t.connectedCallback && !t.__componentAttached) t.connectedCallback()
             if (t.__componentPatched) t.__componentAttached = true
           }
         }
@@ -67,8 +67,7 @@
         if (el.__componentAttached && el.__componentPatched) return
         el.__componentAttached = true
 
-        if (el.createdCallback) el.createdCallback()
-        if (el.attachedCallback) el.attachedCallback()
+        if (el.connectedCallback) el.connectedCallback()
       })
     },
     component (selector, definition) {

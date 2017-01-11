@@ -48,7 +48,7 @@ Mikrom uses MutationObserver to automatically handle components as they are adde
 
 Mikrom can be used as a basic _non-standard_ `Custom Element`-polyfill. But it's lacking any features outside of the element lifecycle callbacks.  
 ```javascript
-if (!window.customElements) window.customElements.define = mikrom.component
+if (!window.customElements) window.customElements = {define: mikrom.component}
 ```
 
 ### Component lifecycle

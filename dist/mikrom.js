@@ -75,6 +75,11 @@
     }
   };
 
-  window.mikrom = mikrom;
   mikrom.bootstrap();
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = mikrom;
+  } else {
+    window.mikrom = mikrom;
+  }
 })();

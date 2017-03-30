@@ -3,5 +3,8 @@ module.exports = {
     "installedESLint": true,
     "plugins": [
         "standard"
-    ]
+    ],
+    "rules": {
+      'no-undef': 0
+    }
 };

@@ -1,3 +1,5 @@
+### Mikrom has been deprecated in favor of [Custom Elements](https://github.com/webcomponents/custom-elements) and will not be receiving any further updates.
+
 # Mikrom
 > Dead simple js-components for next to nothing.  
 
